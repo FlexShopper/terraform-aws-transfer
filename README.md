@@ -5,6 +5,9 @@ Terraform module which creates SFTP and FTPS Transfer-family resources on AWS.
 These types of resources are supported:
 
 * [Transfer Server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_server)
+
+`TODO`
+
 * [Transfer SSH Key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_ssh_key)
 * [Transfer User](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_user)
 
@@ -31,7 +34,7 @@ module "sftp" {
 }
 ```
 
-## Requirements
+## Tested
 
 | Name | Version |
 |------|---------|
@@ -74,10 +77,10 @@ No Modules.
 
 | Name | Description |
 |------|-------------|
-| this.transfer\_server.arn | Amazon Resource Name (ARN) of Transfer Server |
-| this.transfer\_server.id | The Server ID of the Transfer Server (e.g. s-12345678) |
-| this.transfer\_server.endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
-| this.transfer\_server.host_key_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. This value is equivalent to the output of the ssh-keygen -l -E md5 -f my-new-server-key command. |
+| transfer\_sftp\_server\_arn | Amazon Resource Name (ARN) of Transfer Server |
+| transfer\_sftp\_server\_id | The Server ID of the Transfer Server (e.g. s-12345678) |
+| transfer\_sftp\_server\_endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
+| transfer\_sftp\_host\_key\_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. This value is equivalent to the output of the ssh-keygen -l -E md5 -f my-new-server-key command. |
 
 ## Authors
 
