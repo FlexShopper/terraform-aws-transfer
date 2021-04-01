@@ -55,6 +55,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
+  count = var.create_sftp_server ? 1 : 0
   role       = aws_iam_role.this_logging_role[count.index].name
   policy_arn = aws_iam_policy.this_logging_role_policy[count.index].arn
 }
