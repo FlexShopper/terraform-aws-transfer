@@ -46,7 +46,7 @@ resource "aws_iam_policy" "this_logging_role_policy" {
         "Action": [
             "logs:*"
         ],
-        "Resource": "arn:aws:logs:${data.aws_region.this}:${data.aws_caller_identity.this.account_id}:log-group:/${var.cloudwatch_log_group.name}"
+        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/${var.cloudwatch_log_group.name}"
         }
     ]
 }
