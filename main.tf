@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "this" {
 
   tags = merge(map(
       "Name", "${var.name_prefix}-${lookup(var.cloudwatch_log_group, "name")}"
-    )
+    ),
     var.tags
   )
 }
@@ -33,7 +33,7 @@ EOF
 
 resource "aws_iam_policy" "this_logging_role_policy" {
   description = "Access Policy for Cloudwatch Logs."
-  name = concat(var.name_prefix, var.iam_cw_logging_role_name)
+  name = "${var.name_prefix}-${var.iam_cw_logging_role_name}"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -51,10 +51,10 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 EOF
 
   tags = merge(map(
-      "Name", "${concat(var.name_prefix, var.iam_cw_logging_role_name)}"
-    )
-    var.environment,
-
+      "Name", "${var.name_prefix}-${var.iam_cw_logging_role_name}"
+    ),
+    var.environment
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
@@ -71,9 +71,11 @@ resource "aws_transfer_server" "sftp" {
   logging_role            = var.logging_role
   force_destroy           = var.force_destroy
 
-  tags = {
-    Name = "${var.name_prefix}-sftp"
-  }
+  tags = merge(map(
+    "Name" = "${var.name_prefix}-${var.server_name}"
+    ),
+    var.tags
+  )
 }
 
 ## Transfer - FTPS
@@ -85,8 +87,9 @@ resource "aws_transfer_server" "ftps" {
   url                     = var.url
   force_destroy           = var.force_destroy
 
-  tags = {
-    Name = "${var.name_prefix}-sftp"
-    environment  = var.environment
-  }
+  tags = merge(map(
+    "Name" = "${var.name_prefix}-${var.server_name}"
+    ),
+    var.tags
+  )
 }

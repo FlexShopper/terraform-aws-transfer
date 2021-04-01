@@ -78,6 +78,12 @@ variable "host_key" {
   default = null
 }
 
+variable "server_name" {
+  description = "Name of SFTP/FTPS Server"
+  type = string
+  default = "transfer-server"
+}
+
 variable "url" {
   description = "URL of the service endpoint used to authenticate users with an identity_provider_type of API_GATEWAY"
   type = string
