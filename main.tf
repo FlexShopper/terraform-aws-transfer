@@ -50,11 +50,6 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 }
 EOF
 
-  tags = merge(map(
-      "Name", "${var.name_prefix}-${var.iam_cw_logging_role_name}"
-    ),
-    var.environment
-  )
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
