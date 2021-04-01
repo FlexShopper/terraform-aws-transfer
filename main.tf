@@ -4,16 +4,16 @@ resource "aws_cloudwatch_log_group" "this" {
   name = lookup(var.cloudwatch_log_group, "name")
   retention_in_days = lookup(var.cloudwatch_log_group, "retention")
 
-  tags = merge(
-    var.environment,
-    map(
-      "Name", concat(var.name_prefix, lookup(var.cloudwatch_log_group, "name"))
-    ))
+  tags = merge(map(
+      "Name", "${var.name_prefix}-${lookup(var.cloudwatch_log_group, "name")}"
+    )
+    var.tags
+  )
 }
 
 # IAM - Cloudwatch Log Role
 resource "aws_iam_role" "this_logging_role" {
-  name = concat(var.name_prefix, var.iam_cw_logging_role_name)
+  name = "${var.name_prefix}-${var.iam_cw_logging_role_name}"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -50,11 +50,11 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 }
 EOF
 
-  tags = merge(
+  tags = merge(map(
+      "Name", "${concat(var.name_prefix, var.iam_cw_logging_role_name)}"
+    )
     var.environment,
-    map(
-      "Name", concat(var.name_prefix, var.iam_cw_logging_role_name)
-    ))
+
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
@@ -72,8 +72,7 @@ resource "aws_transfer_server" "sftp" {
   force_destroy           = var.force_destroy
 
   tags = {
-    Name = "${var.name_prefix}-sftp-${var.env_shortname}"
-    environment  = var.env_longname
+    Name = "${var.name_prefix}-sftp"
   }
 }
 
@@ -87,7 +86,7 @@ resource "aws_transfer_server" "ftps" {
   force_destroy           = var.force_destroy
 
   tags = {
-    Name = "${var.name_prefix}-sftp-${var.env_shortname}"
-    environment  = var.env_longname
+    Name = "${var.name_prefix}-sftp"
+    environment  = var.environment
   }
 }
