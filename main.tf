@@ -72,7 +72,7 @@ resource "aws_transfer_server" "sftp" {
   force_destroy           = var.force_destroy
 
   tags = merge(map(
-    "Name" = "${var.name_prefix}-${var.server_name}"
+    "Name",  "${var.name_prefix}-${var.server_name}"
     ),
     var.tags
   )
@@ -88,7 +88,7 @@ resource "aws_transfer_server" "ftps" {
   force_destroy           = var.force_destroy
 
   tags = merge(map(
-    "Name" = "${var.name_prefix}-${var.server_name}"
+    "Name", "${var.name_prefix}-${var.server_name}"
     ),
     var.tags
   )
