@@ -142,7 +142,7 @@ resource "aws_s3_bucket" "this" {
 
 resource "aws_s3_bucket_public_access_block" "this" {
   count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  bucket = aws_s3_bucket.this.id
+  bucket = aws_s3_bucket.this[count.index].id
 
   block_public_acls       = var.s3_disable_public_access
   block_public_policy     = var.s3_disable_public_access
