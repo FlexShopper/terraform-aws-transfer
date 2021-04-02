@@ -1,6 +1,6 @@
 # AWS SFTP and FTPS Transfer-family Terraform module
 
-Terraform module which creates SFTP and FTPS Transfer-family resources on AWS.
+Terraform module which creates SFTP Transfer-family resources on AWS.
 
 These types of resources are supported:
 
@@ -22,14 +22,14 @@ Terraform 0.12 and newer. Submit pull-requests to `main` branch.
 SFTP Transfer Server with default actions:
 
 ```hcl
-module "sftp" {
-  source  = "https://github.com/FlexShopper/terraform-aws-transfer"
+module "transfer_sftp" {
+  source  = "https://github.com/FlexShopper/terraform-aws-transfer.git?ref=main"
   
-  name = "my-sftp"
-  transfer_type = "sftp"
+  name_prefix   = "myorg-dev"
+  namespace     = "server-01"
 
   tags = {
-    Environment = "Test"
+    environment = "development"
   }
 }
 ```

@@ -1,11 +1,11 @@
 
 # Cloudwatch Log Group
 resource "aws_cloudwatch_log_group" "this" {
-  name              = lookup(var.cloudwatch_log_group, "name")
+  name              = "${lookup(var.cloudwatch_log_group, "name")}/${var.namespace}"
   retention_in_days = lookup(var.cloudwatch_log_group, "retention")
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${lookup(var.cloudwatch_log_group, "name")}"
+    "Name", "${lookup(var.cloudwatch_log_group, "name")}/${var.namespace}"
     ),
     var.tags
   )
@@ -14,7 +14,7 @@ resource "aws_cloudwatch_log_group" "this" {
 # IAM - Cloudwatch Logs
 resource "aws_iam_role" "this_logging_role" {
   count              = var.create_sftp_server ? 1 : 0
-  name               = "${var.name_prefix}-${var.iam_cw_logging_role_name}"
+  name               = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-role"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -35,7 +35,7 @@ EOF
 resource "aws_iam_policy" "this_logging_role_policy" {
   count       = var.create_sftp_server ? 1 : 0
   description = "Access Policy for Cloudwatch Logs - AWS Transfer Family Service Role."
-  name        = "${var.name_prefix}-${var.iam_cw_logging_role_name}"
+  name        = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
   policy      = <<EOF
 {
     "Version": "2012-10-17",
@@ -52,6 +52,12 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 }
 EOF
 
+  tags = merge(map(
+    "Name", "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
+    ),
+    var.tags
+  )
+
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
@@ -63,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "this_logging_role" {
 # IAM - S3
 resource "aws_iam_role" "this_s3_role" {
   count              = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  name               = "${var.name_prefix}-${var.iam_s3_role_name}"
+  name               = "${var.name_prefix}-${var.namespace}-s3-iam-role"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -84,7 +90,7 @@ EOF
 resource "aws_iam_policy" "this_s3_role_policy" {
   count       = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
   description = "Access Policy for S3 - AWS Transfer Family Service Role."
-  name        = "${var.name_prefix}-${var.iam_cw_logging_role_name}"
+  name        = "${var.name_prefix}-${var.namespace}-s3-iam-policy"
   policy      = <<EOF
 {
   "Version": "2012-10-17",
@@ -117,6 +123,12 @@ resource "aws_iam_policy" "this_s3_role_policy" {
 }
 EOF
 
+  tags = merge(map(
+    "Name", "${var.name_prefix}-${var.namespace}-s3-iam-policy"
+    ),
+    var.tags
+  )
+
 }
 
 resource "aws_iam_role_policy_attachment" "this_s3_role" {
@@ -128,15 +140,11 @@ resource "aws_iam_role_policy_attachment" "this_s3_role" {
 # S3
 resource "aws_s3_bucket" "this" {
   count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  bucket = "${var.name_prefix}-${var.s3_bucket_name}"
+  bucket = "${var.name_prefix}-${var.namespace}-bucket"
   acl    = var.s3_acl
-  
-  versioning {
-    enabled = var.s3_versioning
-  }
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${var.s3_bucket_name}"
+    "Name", "${var.name_prefix}-${var.namespace}-bucket"
     ),
     var.tags
   )
@@ -162,10 +170,14 @@ resource "aws_transfer_server" "sftp" {
   force_destroy          = var.force_destroy
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${var.server_name}"
+    "Name", "${var.name_prefix}-${var.namespace}"
     ),
     var.tags
   )
+
+  provisioner "local-exec" {
+    command = "aws update-server --server-id ${aws_transfer_server.sftp.*.arn} --security-policy-name TransferSecurityPolicy-2020-06"
+  }
 }
 
 ## Transfer - FTPS
@@ -178,7 +190,7 @@ resource "aws_transfer_server" "ftps" {
   force_destroy          = var.force_destroy
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${var.server_name}"
+    "Name", "${var.name_prefix}-${var.namespace}"
     ),
     var.tags
   )

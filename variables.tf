@@ -1,15 +1,15 @@
 
 # Tags
-variable "environment" {
-  description = "The environment tag value."
-  type        = string
-  default     = "development"
-}
-
 variable "name_prefix" {
   description = "Prefix name added to resources."
   type        = string
   default     = null
+}
+
+variable "namespace" {
+  description = "Namespace to apply to all resources to avoid conflicting with other Transfer Servers."
+  type        = string
+  default     = "default-transfer-server"
 }
 
 variable "tags" {
@@ -28,19 +28,6 @@ variable "cloudwatch_log_group" {
   }
 }
 
-# IAM
-variable "iam_cw_logging_role_name" {
-  description = "Name of IAM Cloudwatch Logging Service role."
-  type        = string
-  default     = "transfer-logging-role"
-}
-
-variable "iam_s3_role_name" {
-  description = "Name of IAM S3 Service role."
-  type        = string
-  default     = "transfer-s3-role"
-}
-
 # S3
 variable "s3_acl" {
   description = "Canned ACL to apply on S3 Bucket."
@@ -48,22 +35,10 @@ variable "s3_acl" {
   default     = "private"
 }
 
-variable "s3_bucket_name" {
-  description = "Name of S3 Bucket to use for Transfer Server(s)."
-  type        = string
-  default     = "transfer-logging-role"
-}
-
 variable "s3_disable_public_access" {
   description = "Enable/disable public access on s3 bucket. By default public access blocked."
   type        = bool
   default     = true
-}
-
-variable "s3_versioning" {
-  description = "Enable/disable versioning on s3 bucket."
-  type        = bool
-  default     = false
 }
 
 # Transfer
@@ -107,12 +82,6 @@ variable "host_key" {
   description = "You can replace the default host key with a host key from another server. Do so only if you plan to move existing users from an existing SFTP-enabled server to your new SFTP-enabled server."
   type        = string
   default     = null
-}
-
-variable "server_name" {
-  description = "Name of SFTP/FTPS Server"
-  type        = string
-  default     = "transfer-server"
 }
 
 variable "url" {
