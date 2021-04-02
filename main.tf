@@ -129,7 +129,7 @@ resource "aws_s3_bucket" "this" {
   bucket = "${var.name_prefix}-${var.s3_bucket_name}"
   acl    = var.s3_acl
   
-  versioning = {
+  versioning {
     enabled = var.s3_versioning
   }
 
