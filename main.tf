@@ -1,16 +1,4 @@
 
-# Cloudwatch Log Group
-resource "aws_cloudwatch_log_group" "this" {
-  name              = "${lookup(var.cloudwatch_log_group, "name")}/${var.namespace}"
-  retention_in_days = lookup(var.cloudwatch_log_group, "retention")
-
-  tags = merge(map(
-    "Name", "${lookup(var.cloudwatch_log_group, "name")}/${var.namespace}"
-    ),
-    var.tags
-  )
-}
-
 # IAM - Cloudwatch Logs
 resource "aws_iam_role" "this_logging_role" {
   count              = var.create_sftp_server ? 1 : 0
@@ -53,7 +41,7 @@ resource "aws_iam_policy" "this_logging_role_policy" {
         "Action": [
             "logs:*"
         ],
-        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/${var.cloudwatch_log_group.name}"
+        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/${aws_transfer_server.sftp[count.index].id}"
         }
     ]
 }
@@ -181,9 +169,32 @@ resource "aws_transfer_server" "sftp" {
     var.tags
   )
 
+  # Adding this to mimic behavior from AWS Console.
+  # Option currently not available as Terraform input.
   provisioner "local-exec" {
-    command = "aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].id} --security-policy-name ${var.security_policy_name}"
+    command     = "aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].id} --security-policy-name ${var.security_policy_name}"
+    interpreter = ["/bin/bash", "-c"]
   }
+
+}
+
+resource "null_resource" "sftp_custom_hostname" {
+  count = var.custom_hostname != "" ? 1 : 0
+  provisioner "local-exec" {
+    command = <<-EOF
+      aws transfer tag-resource \
+        --arn '${aws_transfer_server.sftp[count.index].arn}' \
+        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname}'
+EOF
+  }
+
+  # This resource should only run if the following is true
+  # - custom_hostname string is set
+  # - sftp transfer server successfully created
+
+  depends_on = [
+    "aws_transfer_server.sftp[count.index]"
+  ]
 }
 
 ## Transfer - FTPS

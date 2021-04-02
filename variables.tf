@@ -60,6 +60,12 @@ variable "create_ftps_server" {
   default     = false
 }
 
+variable "custom_hostname" {
+  description = "Create custom hostname as a Route53 DNS alias or Other DNS."
+  type        = string
+  default     = null
+}
+
 variable "endpoint_details" {
   description = "Map of VPC endpoint settings that you want to configure for your SFTP server."
   type        = map(any)
