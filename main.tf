@@ -184,7 +184,7 @@ resource "aws_transfer_server" "sftp" {
 }
 
 # Create Custom Hostname Route53 DNS Alias
-resource "null_resource" "specify_sftp_route53_dns_alias" {
+resource "null_resource" "this_sftp_route53_dns_alias" {
   count = var.custom_hostname_route53 != null ? 1 : 0
   provisioner "local-exec" {
     command = <<-EOF
@@ -204,8 +204,21 @@ EOF
   ]
 }
 
+resource "aws_route53_record" "this" {
+  count   = var.custom_hostname_route53 != null ? 1 : 0
+  zone_id = data.aws_route53_zone.this.zone_id
+  name    = var.custom_hostname_route53
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_transfer_server.sftp[count.index].endpoint]
+  depends_on = [
+    aws_transfer_server.sftp[0],
+    null_resource.specify_sftp_route53_dns_alias[0]
+  ]
+}
+
 # Create Custom Hostname Other DNS
-resource "null_resource" "specify_sftp_other_dns_hostname" {
+resource "null_resource" "this_sftp_other_dns_hostname" {
   count = var.custom_hostname_other_dns != null ? 1 : 0
   provisioner "local-exec" {
     command = <<-EOF
