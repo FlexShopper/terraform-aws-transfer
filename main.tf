@@ -30,6 +30,13 @@ resource "aws_iam_role" "this_logging_role" {
 }
 EOF
 
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-role"
+    },
+  )
+
 }
 
 resource "aws_iam_policy" "this_logging_role_policy" {
@@ -52,12 +59,6 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 }
 EOF
 
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
-    },
-  )
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
@@ -84,6 +85,13 @@ resource "aws_iam_role" "this_s3_role" {
     ]
 }
 EOF
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-${var.namespace}-s3-iam-role"
+    },
+  )
 
 }
 
@@ -122,13 +130,6 @@ resource "aws_iam_policy" "this_s3_role_policy" {
   ]
 }
 EOF
-
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.name_prefix}-${var.namespace}-s3-iam-policy"
-    },
-  )
 
 }
 
