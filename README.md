@@ -13,7 +13,7 @@ These types of resources are supported:
 
 ## Terraform versions
 
-Terraform 0.12 and newer. Submit pull-requests to `main` branch.
+Terraform 0.14 and newer. Submit pull-requests to `main` branch.
 
 ## Usage
 
@@ -23,10 +23,26 @@ SFTP Transfer Server with default actions:
 
 ```hcl
 module "transfer_sftp" {
-  source  = "https://github.com/FlexShopper/terraform-aws-transfer.git?ref=main"
+  source  = "https://github.com/FlexShopper/terraform-aws-transfer.git?ref=0.1.0"
   
   name_prefix   = "myorg-dev"
   namespace     = "server-01"
+
+  # Provide an SFTP private key if you are migrating users from an existing sftp server
+  #
+  # Development:
+  # 1. Put value of private key in a *.tfvars file that is not part of version control [heredoc-strings](https://www.terraform.io/docs/language/expressions/strings.html#heredoc-strings)
+  # 2. Get value locally *.tfvars file 
+  #
+  # Staging | Production:
+  # 1. Put value of private key in an encrypted string using a Secret Manager, (e.g. AWS SSM Parameter, AWS Secrets, Hashicorp Vault)
+  # 2. Get value from Secret Manager
+
+  host_key = var.host_key
+
+  # Route53 DNS Alias
+  custom_hostname_route53 = "sftp"
+  route53_zone_name       = "example.com"
 
   tags = {
     environment = "development"
