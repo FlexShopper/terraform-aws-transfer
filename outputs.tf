@@ -4,7 +4,7 @@ output "transfer_sftp_server_arn" {
 }
 
 output "transfer_sftp_server_id" {
-  value = aws_transfer_server.sftp.*.arn
+  value = aws_transfer_server.sftp.*.id
 }
 
 output "transfer_sftp_server_endpoint" {
