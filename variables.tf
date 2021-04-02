@@ -57,8 +57,14 @@ variable "create_ftps_server" {
   default     = false
 }
 
-variable "custom_hostname" {
-  description = "Create custom hostname as a Route53 DNS alias or Other DNS."
+variable "custom_hostname_route53" {
+  description = "Create custom hostname as a Route53 DNS alias. Conflicts with 'custom_hostname_other_dns'"
+  type        = string
+  default     = null
+}
+
+variable "custom_hostname_other_dns" {
+  description = "Create custom hostname that you own in an external DNS service. Conflicts with 'custom_hostname_route53'"
   type        = string
   default     = null
 }
@@ -89,6 +95,12 @@ variable "invocation_role" {
 
 variable "host_key" {
   description = "You can replace the default host key with a host key from another server. Do so only if you plan to move existing users from an existing SFTP-enabled server to your new SFTP-enabled server."
+  type        = string
+  default     = null
+}
+
+variable "route53_zone_name" {
+  description = "Name of route53 zone, (e.g. www.example.com.) This is required if custom_hostname_route53 variable is used."
   type        = string
   default     = null
 }

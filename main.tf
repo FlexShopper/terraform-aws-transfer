@@ -183,8 +183,30 @@ resource "aws_transfer_server" "sftp" {
   }
 }
 
-resource "null_resource" "sftp_custom_hostname" {
-  count = var.custom_hostname != "" ? 1 : 0
+# Create Custom Hostname Route53 DNS Alias
+resource "null_resource" "specify_sftp_route53_dns_alias" {
+  count = var.custom_hostname_route53 != "" ? 1 : 0
+  provisioner "local-exec" {
+    command = <<-EOF
+      aws transfer tag-resource \
+        --arn '${aws_transfer_server.sftp[count.index].arn}' \
+        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname}' \
+        --tags 'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${data.aws_route53_zone.this.zone_id}'
+EOF
+  }
+
+  # This resource should only run if the following is true
+  # - custom_hostname string is set
+  # - sftp transfer server successfully created
+
+  depends_on = [
+    aws_transfer_server.sftp[0]
+  ]
+}
+
+# Create Custom Hostname Other DNS
+resource "null_resource" "specify_sftp_other_dns_hostname" {
+  count = var.custom_hostname_other_dns != "" ? 1 : 0
   provisioner "local-exec" {
     command = <<-EOF
       aws transfer tag-resource \
