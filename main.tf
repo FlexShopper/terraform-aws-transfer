@@ -92,8 +92,8 @@ resource "aws_iam_policy" "this_s3_role_policy" {
     {
       "Effect": "Allow",
       "Action": [
-            "s3:ListBucket",
-                   ],
+        "s3:ListBucket"
+      ],
       "Resource": [
         "arn:aws:s3:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:${var.s3_bucket_name}"
       ]
@@ -103,13 +103,15 @@ resource "aws_iam_policy" "this_s3_role_policy" {
       "Action": [
         "s3:PutObject",
         "s3:GetObject",
-        "s3:DeleteObject",              
+        "s3:DeleteObject",
         "s3:DeleteObjectVersion",
         "s3:GetObjectVersion",
         "s3:GetObjectACL",
         "s3:PutObjectACL"
       ],
-      "Resource": ["arn:aws:s3:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:${var.s3_bucket_name}/*"]
+      "Resource": [
+        "arn:aws:s3:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:${var.s3_bucket_name}/*"
+      ]
     }
   ]
 }
