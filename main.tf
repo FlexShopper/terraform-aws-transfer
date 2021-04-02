@@ -142,7 +142,7 @@ resource "aws_iam_role_policy_attachment" "this_s3_role" {
 # S3
 resource "aws_s3_bucket" "this" {
   count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  bucket = "${var.name_prefix}-${var.region}-${var.namespace}-bucket"
+  bucket = "${var.name_prefix}-${data.aws_region.this.name}-${var.namespace}-bucket"
   acl    = var.s3_acl
 
   versioning {
@@ -150,7 +150,7 @@ resource "aws_s3_bucket" "this" {
   }
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${var.region}-${var.namespace}-bucket"
+    "Name", "${var.name_prefix}-${data.aws_region.this.name}-${var.namespace}-bucket"
     ),
     var.tags
   )
