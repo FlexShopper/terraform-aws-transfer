@@ -52,12 +52,12 @@ resource "aws_iam_policy" "this_logging_role_policy" {
 }
 EOF
 
-  tags = merge(map(
-    "Name", "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
-    ),
-    var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
+    },
   )
-
 }
 
 resource "aws_iam_role_policy_attachment" "this_logging_role" {
@@ -123,10 +123,11 @@ resource "aws_iam_policy" "this_s3_role_policy" {
 }
 EOF
 
-  tags = merge(map(
-    "Name", "${var.name_prefix}-${var.namespace}-s3-iam-policy"
-    ),
-    var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-${var.namespace}-s3-iam-policy"
+    },
   )
 
 }
