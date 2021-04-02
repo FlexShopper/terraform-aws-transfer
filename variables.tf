@@ -90,6 +90,12 @@ variable "host_key" {
   default     = null
 }
 
+variable "security_policy_name" {
+  description = "Specifies the name of the security policy that is attached to the server."
+  type        = string
+  default     = "TransferSecurityPolicy-2020-06"
+}
+
 variable "url" {
   description = "URL of the service endpoint used to authenticate users with an identity_provider_type of API_GATEWAY"
   type        = string
