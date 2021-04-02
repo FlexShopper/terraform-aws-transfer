@@ -182,7 +182,7 @@ resource "aws_transfer_server" "sftp" {
   )
 
   provisioner "local-exec" {
-    command = "aws update-server --server-id ${aws_transfer_server.sftp[count.index].arn} --security-policy-name TransferSecurityPolicy-2020-06"
+    command = "aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].arn} --security-policy-name TransferSecurityPolicy-2020-06"
   }
 }
 
