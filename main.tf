@@ -196,7 +196,9 @@ resource "aws_transfer_server" "sftp" {
   # }
 }
 
-# Create Custom Hostname Route53 DNS Alias
+# Adding this to mimic behavior from AWS Console.
+# Option currently not available as Terraform input.
+# https://github.com/hashicorp/terraform-provider-aws/issues/6956
 resource "null_resource" "this_sftp_route53_dns_alias" {
   count = var.custom_hostname_route53 != null ? 1 : 0
   provisioner "local-exec" {
@@ -209,7 +211,7 @@ EOF
   }
 
   # This resource should only run if the following is true
-  # - custom_hostname string is set
+  # - custom_hostname_route53 string is set
   # - sftp transfer server successfully created
 
   depends_on = [
@@ -242,7 +244,7 @@ EOF
   }
 
   # This resource should only run if the following is true
-  # - custom_hostname string is set
+  # - custom_hostname_other_dns string is set
   # - sftp transfer server successfully created
 
   depends_on = [
