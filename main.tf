@@ -213,7 +213,7 @@ resource "aws_route53_record" "this" {
   records = [aws_transfer_server.sftp[count.index].endpoint]
   depends_on = [
     aws_transfer_server.sftp[0],
-    null_resource.specify_sftp_route53_dns_alias[0]
+    null_resource.this_sftp_route53_dns_alias[0]
   ]
 }
 
