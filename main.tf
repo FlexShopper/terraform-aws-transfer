@@ -41,7 +41,7 @@ resource "aws_iam_policy" "this_logging_role_policy" {
         "Action": [
             "logs:*"
         ],
-        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/${aws_transfer_server.sftp[count.index].id}"
+        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
         }
     ]
 }
