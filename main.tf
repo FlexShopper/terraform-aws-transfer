@@ -150,7 +150,7 @@ resource "aws_s3_bucket" "this" {
   }
 
   tags = merge(map(
-    "Name", "${var.name_prefix}-${var.namespace}-bucket"
+    "Name", "${var.name_prefix}-${var.region}-${var.namespace}-bucket"
     ),
     var.tags
   )
