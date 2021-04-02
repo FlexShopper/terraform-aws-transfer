@@ -188,12 +188,6 @@ resource "aws_transfer_server" "sftp" {
     command     = "aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].id} --security-policy-name ${var.security_policy_name}"
     interpreter = ["/bin/bash", "-c"]
   }
-
-  # # The Cloudwatch Group is automatically created by the creation of this resource so it isn't directly managed by Terraform.
-  # provisioner "local-exec" {
-  #   command     = "aws logs put-retention-policy --log-group-name '/aws/transfer/${aws_transfer_server.sftp[count.index].id}' --retention-in-days ${var.log_retention}"
-  #   interpreter = ["/bin/bash", "-c"]
-  # }
 }
 
 # Adding this to mimic behavior from AWS Console.
