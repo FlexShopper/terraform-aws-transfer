@@ -109,7 +109,7 @@ resource "aws_iam_policy" "this_s3_role_policy" {
         "s3:ListBucket"
       ],
       "Resource": [
-        "arn:aws:s3:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:${aws_s3_bucket.this[count.index].id}"
+        "arn:aws:s3:::${aws_s3_bucket.this[count.index].id}"
       ]
     },
     {
@@ -124,7 +124,7 @@ resource "aws_iam_policy" "this_s3_role_policy" {
         "s3:PutObjectACL"
       ],
       "Resource": [
-        "arn:aws:s3:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:${aws_s3_bucket.this[count.index].id}/*"
+        "arn:aws:s3:::${aws_s3_bucket.this[count.index].id}/*"
       ]
     }
   ]
