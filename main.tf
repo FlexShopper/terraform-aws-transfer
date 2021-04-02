@@ -128,14 +128,16 @@ resource "aws_s3_bucket" "this" {
   count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
   bucket = "${var.name_prefix}-${var.s3_bucket_name}"
   acl    = var.s3_acl
+  
+  versioning = {
+    enabled = var.s3_versioning
+  }
 
   tags = merge(map(
     "Name", "${var.name_prefix}-${var.s3_bucket_name}"
     ),
     var.tags
   )
-
-  versioning = var.s3_versioning
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
