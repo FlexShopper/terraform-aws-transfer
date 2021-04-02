@@ -176,6 +176,11 @@ resource "aws_transfer_server" "sftp" {
     interpreter = ["/bin/bash", "-c"]
   }
 
+  # The Cloudwatch Group is automatically created by the creation of this resource so it isn't directly managed by Terraform.
+  provisioner "local-exec" {
+    command     = "aws logs put-retention-policy --log-group-name '/aws/transfer/${aws_transfer_server.sftp[count.index].id}' --retention-in-days ${var.log_retention}"
+    interpreter = ["/bin/bash", "-c"]
+  }
 }
 
 resource "null_resource" "sftp_custom_hostname" {

@@ -19,13 +19,10 @@ variable "tags" {
 }
 
 # Cloudwatch
-variable "cloudwatch_log_group" {
-  description = "Map of Cloudwatch Log Group settings for Transfer Server."
-  type        = map(any)
-  default = {
-    name      = "/aws/transfer"
-    retention = 30
-  }
+variable "log_retention" {
+  description = "Cloudwatch Log Group Retention for Transfer Server."
+  type        = number
+  default     = 30
 }
 
 # S3
