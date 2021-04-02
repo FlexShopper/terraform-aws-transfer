@@ -14,7 +14,7 @@ resource "aws_cloudwatch_log_group" "this" {
 # IAM - Cloudwatch Logs
 resource "aws_iam_role" "this_logging_role" {
   count              = var.create_sftp_server ? 1 : 0
-  name               = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-role"
+  name               = "${var.name_prefix}-${var.namespace}-cw-iam-role"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -42,7 +42,7 @@ EOF
 resource "aws_iam_policy" "this_logging_role_policy" {
   count       = var.create_sftp_server ? 1 : 0
   description = "Access Policy for Cloudwatch Logs - AWS Transfer Family Service Role."
-  name        = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-policy"
+  name        = "${var.name_prefix}-${var.namespace}-cw-iam-policy"
   policy      = <<EOF
 {
     "Version": "2012-10-17",
