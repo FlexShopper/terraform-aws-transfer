@@ -198,7 +198,7 @@ EOF
   # - sftp transfer server successfully created
 
   depends_on = [
-    "aws_transfer_server.sftp[count.index]"
+    aws_transfer_server.sftp[0]
   ]
 }
 
