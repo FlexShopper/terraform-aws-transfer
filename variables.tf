@@ -41,6 +41,12 @@ variable "s3_disable_public_access" {
   default     = true
 }
 
+variable "s3_versioning" {
+  description = "Enable/disable versioning. By is disabled."
+  type        = bool
+  default     = false
+}
+
 # Transfer
 variable "create_sftp_server" {
   description = "Controls if the SFTP Server should be created."

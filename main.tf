@@ -145,6 +145,10 @@ resource "aws_s3_bucket" "this" {
   bucket = "${var.name_prefix}-${var.namespace}-bucket"
   acl    = var.s3_acl
 
+  versioning {
+    enabled = var.s3_versioning
+  }
+
   tags = merge(map(
     "Name", "${var.name_prefix}-${var.namespace}-bucket"
     ),
