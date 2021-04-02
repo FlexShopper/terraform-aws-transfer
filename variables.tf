@@ -96,7 +96,6 @@ variable "invocation_role" {
 variable "host_key" {
   description = "You can replace the default host key with a host key from another server. Do so only if you plan to move existing users from an existing SFTP-enabled server to your new SFTP-enabled server."
   type        = string
-  sensitive   = true
   default     = null
 }
 
