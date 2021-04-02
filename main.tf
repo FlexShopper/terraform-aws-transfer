@@ -190,7 +190,7 @@ resource "null_resource" "specify_sftp_route53_dns_alias" {
     command = <<-EOF
       aws transfer tag-resource \
         --arn '${aws_transfer_server.sftp[count.index].arn}' \
-        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname}' \
+        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_route53}' \
         --tags 'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${data.aws_route53_zone.this.zone_id}'
 EOF
   }
@@ -211,7 +211,7 @@ resource "null_resource" "specify_sftp_other_dns_hostname" {
     command = <<-EOF
       aws transfer tag-resource \
         --arn '${aws_transfer_server.sftp[count.index].arn}' \
-        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname}'
+        --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_other_dns}'
 EOF
   }
 
