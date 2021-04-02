@@ -1,4 +1,17 @@
 
+resource "aws_cloudwatch_log_group" "this" {
+  count              = var.create_sftp_server ? 1 : 0
+  name              = "/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
+  retention_in_days = var.log_retention
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
+    },
+  )
+}
+
 # IAM - Cloudwatch Logs
 resource "aws_iam_role" "this_logging_role" {
   count              = var.create_sftp_server ? 1 : 0
@@ -176,11 +189,11 @@ resource "aws_transfer_server" "sftp" {
     interpreter = ["/bin/bash", "-c"]
   }
 
-  # The Cloudwatch Group is automatically created by the creation of this resource so it isn't directly managed by Terraform.
-  provisioner "local-exec" {
-    command     = "aws logs put-retention-policy --log-group-name '/aws/transfer/${aws_transfer_server.sftp[count.index].id}' --retention-in-days ${var.log_retention}"
-    interpreter = ["/bin/bash", "-c"]
-  }
+  # # The Cloudwatch Group is automatically created by the creation of this resource so it isn't directly managed by Terraform.
+  # provisioner "local-exec" {
+  #   command     = "aws logs put-retention-policy --log-group-name '/aws/transfer/${aws_transfer_server.sftp[count.index].id}' --retention-in-days ${var.log_retention}"
+  #   interpreter = ["/bin/bash", "-c"]
+  # }
 }
 
 # Create Custom Hostname Route53 DNS Alias
