@@ -202,6 +202,7 @@ resource "null_resource" "this_sftp_route53_dns_alias" {
         --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_route53}' \
         --tags 'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${data.aws_route53_zone.this.zone_id}'
 EOF
+    interpreter = ["/bin/bash", "-c"]
   }
 
   # This resource should only run if the following is true
