@@ -78,9 +78,9 @@ resource "aws_iam_role" "this_s3_role" {
         {
         "Effect": "Allow",
         "Principal": {
-            "Service": "transfer.amazonaws.com"
+            "Service": "s3.amazonaws.com"
         },
-        "Action": "s3:AssumeRole"
+        "Action": "sts:AssumeRole"
         }
     ]
 }
