@@ -34,7 +34,7 @@ EOF
   tags = merge(
     var.tags,
     {
-      Name = "${var.name_prefix}-${var.namespace}-cloudwatch-iam-role"
+      Name = "${var.name_prefix}-${var.namespace}-cw-iam-role"
     },
   )
 
