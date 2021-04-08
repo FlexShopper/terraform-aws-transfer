@@ -98,13 +98,13 @@ module "transfer_sftp" {
 
 | Name | Description |
 |------|-------------|
-| iam_logging_role_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to upload Cloudwatch logs. |
-| iam_s3_role_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to access S3. |
-| s3_bucket_id | S3 Bucket name. |
-| server_arn | Amazon Resource Name (ARN) of Transfer Server. |
-| server_id | The Server ID of the Transfer Server (e.g. s-12345678). |
-| server_endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
-| host_key_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. |
+| iam\_logging\_role\_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to upload Cloudwatch logs. |
+| iam\_s3\_role\_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to access S3. |
+| s3\_bucket\_id | S3 Bucket name. |
+| server\_arn | Amazon Resource Name (ARN) of Transfer Server. |
+| server\_id | The Server ID of the Transfer Server (e.g. s-12345678). |
+| server\_endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
+| host\_key\_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. |
 
 
 ## Authors
