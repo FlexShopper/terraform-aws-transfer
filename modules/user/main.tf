@@ -16,7 +16,7 @@ resource "aws_transfer_user" "this" {
   tags = merge(
     var.tags,
     {
-      Name = var.username
+      Name = var.user_name
     },
   )
 }
