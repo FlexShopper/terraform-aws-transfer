@@ -25,7 +25,6 @@ resource "aws_iam_role" "this" {
         "Effect": "Allow",
         "Principal": {
             "Service": "transfer.amazonaws.com"
-            ]
         },
         "Action": "sts:AssumeRole"
         }
