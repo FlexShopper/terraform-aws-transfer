@@ -91,6 +91,6 @@ variable "user_name" {
 
 variable "tags" {
   description = "A map of tags to assign to the resource."
-  type = string
+  type = map(string)
   default = null
 }
