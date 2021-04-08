@@ -24,6 +24,6 @@ resource "aws_transfer_user" "this" {
 resource "aws_transfer_ssh_key" "this" {
   count     = var.create_user ? 1 : 0
   server_id = var.server_id
-  user_name = var.user_name
+  user_name = aws_transfer_user.this.user_name
   body      = var.body
 }
