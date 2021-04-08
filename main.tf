@@ -13,10 +13,10 @@ resource "aws_cloudwatch_log_group" "this" {
   )
 }
 
-# IAM - Cloudwatch Logs
-resource "aws_iam_role" "this_logging_role" {
-  count              = var.create_sftp_server ? 1 : 0
-  name               = "${var.name_prefix}-${var.namespace}-cw-iam-role"
+# IAM - Transfer Family Server
+resource "aws_iam_role" "this" {
+  count              = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  name               = "${var.name_prefix}-${var.namespace}-iam-role"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -25,6 +25,7 @@ resource "aws_iam_role" "this_logging_role" {
         "Effect": "Allow",
         "Principal": {
             "Service": "transfer.amazonaws.com"
+            ]
         },
         "Action": "sts:AssumeRole"
         }
@@ -35,77 +36,29 @@ EOF
   tags = merge(
     var.tags,
     {
-      Name = "${var.name_prefix}-${var.namespace}-cw-iam-role"
+      Name = "${var.name_prefix}-${var.namespace}-iam-role"
     },
   )
-
 }
 
-resource "aws_iam_policy" "this_logging_role_policy" {
-  count       = var.create_sftp_server ? 1 : 0
-  description = "Access Policy for Cloudwatch Logs - AWS Transfer Family Service Role."
-  name        = "${var.name_prefix}-${var.namespace}-cw-iam-policy"
-  policy      = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-        "Sid": "CloudWatchLogsAccess",
-        "Effect": "Allow",
-        "Action": [
-            "logs:*"
-        ],
-        "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
-        }
-    ]
-}
-EOF
-
-}
-
-resource "aws_iam_role_policy_attachment" "this_logging_role" {
-  count      = var.create_sftp_server ? 1 : 0
-  role       = aws_iam_role.this_logging_role[count.index].name
-  policy_arn = aws_iam_policy.this_logging_role_policy[count.index].arn
-}
-
-# IAM - S3
-resource "aws_iam_role" "this_s3_role" {
-  count              = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  name               = "${var.name_prefix}-${var.namespace}-s3-iam-role"
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-        "Effect": "Allow",
-        "Principal": {
-            "Service": "s3.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-        }
-    ]
-}
-EOF
-
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.name_prefix}-${var.namespace}-s3-iam-role"
-    },
-  )
-
-}
-
-resource "aws_iam_policy" "this_s3_role_policy" {
+resource "aws_iam_policy" "this" {
   count       = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
   description = "Access Policy for S3 - AWS Transfer Family Service Role."
-  name        = "${var.name_prefix}-${var.namespace}-s3-iam-policy"
+  name        = "${var.name_prefix}-${var.namespace}-iam-policy"
   policy      = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Sid": "CloudWatchLogsAccess",
+      "Effect": "Allow",
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
+    },
+    {
+      "Sid": "S3 List Buckets",
       "Effect": "Allow",
       "Action": [
         "s3:ListBucket"
@@ -115,6 +68,7 @@ resource "aws_iam_policy" "this_s3_role_policy" {
       ]
     },
     {
+      "Sid": "S3 Bucket Objects",
       "Effect": "Allow",
       "Action": [
         "s3:PutObject",
@@ -135,10 +89,10 @@ EOF
 
 }
 
-resource "aws_iam_role_policy_attachment" "this_s3_role" {
+resource "aws_iam_role_policy_attachment" "this" {
   count      = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  role       = aws_iam_role.this_s3_role[count.index].name
-  policy_arn = aws_iam_policy.this_s3_role_policy[count.index].arn
+  role       = aws_iam_role.this[count.index].name
+  policy_arn = aws_iam_policy.this[count.index].arn
 }
 
 # S3

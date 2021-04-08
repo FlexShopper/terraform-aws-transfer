@@ -98,8 +98,7 @@ module "transfer_sftp" {
 
 | Name | Description |
 |------|-------------|
-| iam\_logging\_role\_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to upload Cloudwatch logs. |
-| iam\_s3\_role\_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to access S3. |
+| iam\_role\_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to access S3 and Cloudwatch Logs. |
 | s3\_bucket\_id | S3 Bucket name. |
 | server\_arn | Amazon Resource Name (ARN) of Transfer Server. |
 | server\_id | The Server ID of the Transfer Server (e.g. s-12345678). |

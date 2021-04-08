@@ -1,11 +1,7 @@
 
 # IAM
-output "iam_logging_role_arn" {
-  value = element(aws_iam_role.this_logging_role.*.arn, 0)
-}
-
-output "iam_s3_role_arn" {
-  value = element(aws_iam_role.this_s3_role.*.arn, 0)
+output "iam_role_arn" {
+  value = element(aws_iam_role.this.*.arn, 0)
 }
 
 # S3
