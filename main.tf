@@ -127,7 +127,7 @@ resource "aws_transfer_server" "sftp" {
   endpoint_type          = var.endpoint_type
   host_key               = var.host_key
   identity_provider_type = var.identity_provider_type
-  logging_role           = aws_iam_role.this_logging_role[count.index].arn
+  logging_role           = aws_iam_role.this[count.index].arn
   force_destroy          = var.force_destroy
 
   tags = merge(map(
