@@ -57,7 +57,7 @@ resource "aws_iam_policy" "this" {
       "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
     },
     {
-      "Sid": "S3 List Buckets",
+      "Sid": "S3ListBuckets",
       "Effect": "Allow",
       "Action": [
         "s3:ListBucket"
@@ -67,7 +67,7 @@ resource "aws_iam_policy" "this" {
       ]
     },
     {
-      "Sid": "S3 Bucket Objects",
+      "Sid": "S3BucketObjects",
       "Effect": "Allow",
       "Action": [
         "s3:PutObject",
