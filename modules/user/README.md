@@ -1,6 +1,6 @@
-# AWS SFTP and FTPS Transfer-family Terraform module
+# AWS SFTP User for Transfer Family Server
 
-Terraform module which creates SFTP Transfer-family resources on AWS.
+Terraform module which creates SFTP User Transfer-family resources on AWS.
 
 These types of resources are supported:
 
@@ -15,7 +15,7 @@ Terraform 0.14 and newer. Submit pull-requests to `main` branch.
 
 ### Transfer Server
 
-SFTP Transfer User with default actions:
+Create Transfer Server
 
 ```hcl
 
@@ -33,12 +33,16 @@ module "transfer_sftp" {
     environment = "development"
   }
 }
+```
 
+Create SFTP Transfer User
+
+```hcl
 module "transfer_sftp_user_johndoe" {
   source  = "https://github.com/FlexShopper/terraform-aws-transfer.git?ref=0.1.0//modules/user"
 
   body                    = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZTwfPTLQj47Dn4WOkwG61KZ+/raI50kbmHhLEckUnxEseTB5GAYlKcAhquSQhDsNRCY16YyxP/7mWAC9Y1CfjO5k2wk1ILykiTQAa0ejliv2rAqTGdO9cCzs7xXxemh2TE/nLNZPShDj+3GSs9sNBaPE6NV+8LPjJPuRVyseCiqptUXyLXa64IDwIo8n2j6u9PR87bYb3FesMcb+q4cPvFRKwgXZ8ZMz+5c+kl261HouoVt1bH/S8r/1qNw/OnJczqZbqa5w76qukQXxuX9ZOWAt8hPWAmwZRjz+WtVFUJOBa2/qPNpUPYwr3YxsnIFK1SayrvfV2qkQkdpJT49z1 johndoe@foobar.ec2.internal"
-  home_directory          = "/${aws_s3_bucket.this.id}/"${var.username}"
+  home_directory          = "/${aws_s3_bucket.this.id}/${var.username}"
   home_directory_mappings = {
     entry = "/",
     target = "/${module.transfer_sftp.s3_bucket_id}/$${Transfer:UserName}"
