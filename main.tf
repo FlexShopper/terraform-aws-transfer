@@ -1,4 +1,5 @@
 
+# Cloudwatch - Log Group
 resource "aws_cloudwatch_log_group" "this" {
   count              = var.create_sftp_server ? 1 : 0
   name              = "/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
@@ -248,7 +249,7 @@ EOF
   ]
 }
 
-## Transfer - FTPS
+# Transfer - FTPS
 resource "aws_transfer_server" "ftps" {
   count                  = var.create_ftps_server ? 1 : 0
   endpoint_type          = var.endpoint_type

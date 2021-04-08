@@ -65,15 +65,20 @@ module "transfer_sftp" {
 
 ## Modules
 
-No Modules.
+| [user](./user) |
 
 ## Resources
 
 | Name |
 |------|
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) |
+| [aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) |
+| [aws_s3_bucket_public_access_block](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) |
 | [aws_transfer_server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_server) |
-| [aws_transfer_ssh_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_ssh_key) |
-| [aws_transfer_server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_user) |
+| [null_resource](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) |
 
 ## Inputs
 
@@ -93,10 +98,14 @@ No Modules.
 
 | Name | Description |
 |------|-------------|
-| transfer\_sftp\_server\_arn | Amazon Resource Name (ARN) of Transfer Server |
-| transfer\_sftp\_server\_id | The Server ID of the Transfer Server (e.g. s-12345678) |
-| transfer\_sftp\_server\_endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
-| transfer\_sftp\_host\_key\_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. This value is equivalent to the output of the ssh-keygen -l -E md5 -f my-new-server-key command. |
+| iam_logging_role_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to upload Cloudwatch logs. |
+| iam_s3_role_arn | Amazon Resource Name (ARN) of IAM Service role for Transfer Server to access S3. |
+| s3_bucket_id | S3 Bucket name. |
+| server_arn | Amazon Resource Name (ARN) of Transfer Server. |
+| server_id | The Server ID of the Transfer Server (e.g. s-12345678). |
+| server_endpoint | The endpoint of the Transfer Server (e.g. s-12345678.server.transfer.REGION.amazonaws.com) |
+| host_key_fingerprint | This value contains the message-digest algorithm (MD5) hash of the server's host key. |
+
 
 ## Authors
 
