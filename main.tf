@@ -97,8 +97,9 @@ resource "aws_iam_role_policy_attachment" "this" {
 # S3
 resource "aws_s3_bucket" "this" {
   count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
-  bucket = "${var.name_prefix}-${data.aws_region.this.name}-${var.namespace}-bucket"
   acl    = var.s3_acl
+  bucket = "${var.name_prefix}-${data.aws_region.this.name}-${var.namespace}-bucket"
+  force_destroy =  var.s3_force_destroy
 
   versioning {
     enabled = var.s3_versioning
