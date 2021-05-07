@@ -1,15 +1,15 @@
 
 # Tags
-variable "environment" {
-  description = "The environment tag value."
-  type        = string
-  default     = "development"
-}
-
 variable "name_prefix" {
   description = "Prefix name added to resources."
   type        = string
   default     = null
+}
+
+variable "namespace" {
+  description = "Namespace to apply to all resources to avoid conflicting with other Transfer Servers."
+  type        = string
+  default     = "default-transfer-server"
 }
 
 variable "tags" {
@@ -19,26 +19,10 @@ variable "tags" {
 }
 
 # Cloudwatch
-variable "cloudwatch_log_group" {
-  description = "Map of Cloudwatch Log Group settings for Transfer Server."
-  type        = map(any)
-  default = {
-    name      = "/aws/transfer"
-    retention = 30
-  }
-}
-
-# IAM
-variable "iam_cw_logging_role_name" {
-  description = "Name of IAM Cloudwatch Logging Service role."
-  type        = string
-  default     = "transfer-logging-role"
-}
-
-variable "iam_s3_role_name" {
-  description = "Name of IAM S3 Service role."
-  type        = string
-  default     = "transfer-s3-role"
+variable "log_retention" {
+  description = "Cloudwatch Log Group Retention for Transfer Server."
+  type        = number
+  default     = 30
 }
 
 # S3
@@ -48,20 +32,20 @@ variable "s3_acl" {
   default     = "private"
 }
 
-variable "s3_bucket_name" {
-  description = "Name of S3 Bucket to use for Transfer Server(s)."
-  type        = string
-  default     = "transfer-logging-role"
-}
-
 variable "s3_disable_public_access" {
   description = "Enable/disable public access on s3 bucket. By default public access blocked."
   type        = bool
   default     = true
 }
 
+variable "s3_force_destroy" {
+  description = "A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error."
+  type        = bool
+  default     = false
+}
+
 variable "s3_versioning" {
-  description = "Enable/disable versioning on s3 bucket."
+  description = "Enable versioning."
   type        = bool
   default     = false
 }
@@ -77,6 +61,18 @@ variable "create_ftps_server" {
   description = "Controls if the FTPS Server should be created."
   type        = bool
   default     = false
+}
+
+variable "custom_hostname_route53" {
+  description = "Create custom hostname as a Route53 DNS alias. Conflicts with 'custom_hostname_other_dns'"
+  type        = string
+  default     = null
+}
+
+variable "custom_hostname_other_dns" {
+  description = "Create custom hostname that you own in an external DNS service. Conflicts with 'custom_hostname_route53'"
+  type        = string
+  default     = null
 }
 
 variable "endpoint_details" {
@@ -106,13 +102,20 @@ variable "invocation_role" {
 variable "host_key" {
   description = "You can replace the default host key with a host key from another server. Do so only if you plan to move existing users from an existing SFTP-enabled server to your new SFTP-enabled server."
   type        = string
+  sensitive   = true
   default     = null
 }
 
-variable "server_name" {
-  description = "Name of SFTP/FTPS Server"
+variable "route53_zone_name" {
+  description = "Name of route53 zone, (e.g. www.example.com.) This is required if custom_hostname_route53 variable is used."
   type        = string
-  default     = "transfer-server"
+  default     = null
+}
+
+variable "security_policy_name" {
+  description = "Specifies the name of the security policy that is attached to the server."
+  type        = string
+  default     = "TransferSecurityPolicy-2020-06"
 }
 
 variable "url" {
