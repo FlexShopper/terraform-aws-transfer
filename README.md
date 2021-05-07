@@ -5,9 +5,6 @@ Terraform module which creates SFTP Transfer-family resources on AWS.
 These types of resources are supported:
 
 * [Transfer Server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_server)
-
-`TODO`
-
 * [Transfer SSH Key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_ssh_key)
 * [Transfer User](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/transfer_user)
 
@@ -65,7 +62,7 @@ module "transfer_sftp" {
 
 ## Modules
 
-| [user](./user) |
+| [user](https://github.com/FlexShopper/terraform-aws-transfer/tree/main/modules/user) |
 
 ## Resources
 

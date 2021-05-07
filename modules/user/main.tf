@@ -27,3 +27,4 @@ resource "aws_transfer_ssh_key" "this" {
   user_name = aws_transfer_user.this[count.index].user_name
   body      = var.body
 }
+
