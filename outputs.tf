@@ -25,3 +25,4 @@ output "server_endpoint" {
 output "host_key_fingerprint" {
   value = element(aws_transfer_server.sftp.*.host_key_fingerprint, 0)
 }
+

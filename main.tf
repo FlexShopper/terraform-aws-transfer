@@ -218,3 +218,4 @@ resource "aws_transfer_server" "ftps" {
     var.tags
   )
 }
+
