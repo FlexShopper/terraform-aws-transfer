@@ -5,4 +5,3 @@ data "aws_route53_zone" "this" {
   count = var.route53_zone_name != null ? 1 : 0
   name = var.route53_zone_name
 }
-

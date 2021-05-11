@@ -156,7 +156,7 @@ if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then
 aws transfer tag-resource \
 --arn '${aws_transfer_server.sftp[count.index].arn}' \
 --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_route53}' \
-       'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${element(data.aws_route53_zone.this.*.zone_id, count.index)}'
+       'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${data.aws_route53_zone.this[count.index].zone_id}'
 else echo 'ERROR: missing aws cli' ; fi
 EOF
     interpreter = ["/bin/bash", "-c"]
@@ -173,7 +173,7 @@ EOF
 
 resource "aws_route53_record" "this" {
   count   = var.custom_hostname_route53 != null ? 1 : 0
-  zone_id = data.aws_route53_zone.this.zone_id
+  zone_id = data.aws_route53_zone.this[count.index].zone_id
   name    = var.custom_hostname_route53
   type    = "CNAME"
   ttl     = "300"
