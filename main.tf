@@ -140,7 +140,7 @@ resource "aws_transfer_server" "sftp" {
   # Adding this to mimic behavior from AWS Console.
   # Option currently not available as Terraform input.
   provisioner "local-exec" {
-    command     = "if [[ $(which aws >/dev/null; echo $?) == '0' ]];then aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].id} --security-policy-name ${var.security_policy_name} ; else echo 'ERROR: missing aws cli' ; fi"
+    command     = "if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then aws transfer update-server --server-id ${aws_transfer_server.sftp[count.index].id} --security-policy-name ${var.security_policy_name} ; else echo 'ERROR: missing aws cli' ; fi"
     interpreter = ["/bin/bash", "-c"]
   }
 }
@@ -152,11 +152,11 @@ resource "null_resource" "this_sftp_route53_dns_alias" {
   count = var.custom_hostname_route53 != null ? 1 : 0
   provisioner "local-exec" {
     command = <<EOF
-if [[ $(which aws >/dev/null; echo $?) == '0' ]];then
+if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then
 aws transfer tag-resource \
 --arn '${aws_transfer_server.sftp[count.index].arn}' \
 --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_route53}' \
-       'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${data.aws_route53_zone.this[0].zone_id}'
+       'Key=aws:transfer:route53HostedZoneId,Value=/hostedzone/${element(data.aws_route53_zone.*.zone_id, count.index)}'
 else echo 'ERROR: missing aws cli' ; fi
 EOF
     interpreter = ["/bin/bash", "-c"]
@@ -189,7 +189,7 @@ resource "null_resource" "this_sftp_other_dns_hostname" {
   count = var.custom_hostname_other_dns != null ? 1 : 0
   provisioner "local-exec" {
     command = <<EOF
-if [[ $(which aws >/dev/null; echo $?) == '0' ]];then
+if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then
 aws transfer tag-resource \
 --arn '${aws_transfer_server.sftp[count.index].arn}' \
 --tags 'Key=aws:transfer:customHostname,Value=${var.custom_hostname_other_dns}'
