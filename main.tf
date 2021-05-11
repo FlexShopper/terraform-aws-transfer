@@ -137,6 +137,12 @@ resource "aws_transfer_server" "sftp" {
     var.tags
   )
 
+  lifecycle {
+    ignore_changes = [
+      security_policy_name,
+    ]
+  }
+
   # Adding this to mimic behavior from AWS Console.
   # Option currently not available as Terraform input.
   provisioner "local-exec" {
