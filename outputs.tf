@@ -6,7 +6,7 @@ output "iam_role_arn" {
 
 # S3
 output "s3_bucket_id" {
-  value = [aws_s3_bucket.this.*.id]
+  value = aws_s3_bucket.this.*.id
 }
 
 # Transfer Server
