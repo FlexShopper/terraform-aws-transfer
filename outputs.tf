@@ -9,6 +9,10 @@ output "s3_bucket_id" {
   value = element(aws_s3_bucket.this.*.id, 0)
 }
 
+output "s3_bucket_arn" {
+  value = element(aws_s3_bucket.this.*.arn, 0)
+}
+
 # Transfer Server
 output "server_arn" {
   value = element(aws_transfer_server.sftp.*.id, 0)
