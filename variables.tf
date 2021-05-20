@@ -54,13 +54,6 @@ variable "s3_force_destroy" {
   default     = false
 }
 
-locals {
-
-  s3_access_to_buckets = [
-    "arn:aws:s3:::${var.s3_access_to_buckets}/*"
-  ]
-}
-
 variable "s3_versioning" {
   description = "Enable versioning."
   type        = bool
