@@ -149,7 +149,7 @@ resource "aws_transfer_server" "sftp" {
 # Option currently not available as Terraform input.
 # https://github.com/hashicorp/terraform-provider-aws/issues/6956
 resource "null_resource" "this_sftp_route53_dns_alias" {
-  count = var.custom_hostname_route53 != null ? 1 : 0
+  count = var.custom_hostname_route53 != null && var.create_sftp_server != false ? 1 : 0 
   provisioner "local-exec" {
     command = <<EOF
 if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then
@@ -172,7 +172,7 @@ EOF
 }
 
 resource "aws_route53_record" "this" {
-  count   = var.custom_hostname_route53 != null ? 1 : 0
+  count   = var.custom_hostname_route53 != null && var.create_sftp_server != false ? 1 : 0 
   zone_id = data.aws_route53_zone.this[count.index].zone_id
   name    = var.custom_hostname_route53
   type    = "CNAME"
