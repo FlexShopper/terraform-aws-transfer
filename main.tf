@@ -15,7 +15,7 @@ resource "aws_cloudwatch_log_group" "this" {
 
 # IAM - Transfer Family Server
 resource "aws_iam_role" "this" {
-  count              = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  count              = var.create_sftp_server ? 1 : 0
   name               = "${var.name_prefix}-${var.namespace}-iam-role"
   assume_role_policy = <<EOF
 {
@@ -41,7 +41,7 @@ EOF
 }
 
 resource "aws_iam_policy" "this" {
-  count       = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  count       = var.create_sftp_server ? 1 : 0
   description = "Access Policy for S3 - AWS Transfer Family Service Role."
   name        = "${var.name_prefix}-${var.namespace}-iam-policy"
   policy      = <<EOF
@@ -89,14 +89,14 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-  count      = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  count      = var.create_sftp_server ? 1 : 0
   role       = aws_iam_role.this[count.index].name
   policy_arn = aws_iam_policy.this[count.index].arn
 }
 
 # S3
 resource "aws_s3_bucket" "this" {
-  count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  count  = var.create_sftp_server ? 1 : 0
   acl    = var.s3_acl
   bucket = "${var.name_prefix}-${data.aws_region.this.name}-${var.namespace}-bucket"
   force_destroy = var.s3_force_destroy
@@ -113,7 +113,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
-  count  = var.create_sftp_server ? 1 : 0 || var.create_ftps_server ? 1 : 0
+  count  = var.create_sftp_server ? 1 : 0
   bucket = aws_s3_bucket.this[count.index].id
 
   block_public_acls       = var.s3_disable_public_access
@@ -136,12 +136,6 @@ resource "aws_transfer_server" "sftp" {
     ),
     var.tags
   )
-
-  lifecycle {
-    ignore_changes = [
-      security_policy_name,
-    ]
-  }
 
   # Adding this to mimic behavior from AWS Console.
   # Option currently not available as Terraform input.
@@ -192,7 +186,7 @@ resource "aws_route53_record" "this" {
 
 # Create Custom Hostname Other DNS
 resource "null_resource" "this_sftp_other_dns_hostname" {
-  count = var.custom_hostname_other_dns != null ? 1 : 0
+  count = var.custom_hostname_other_dns != null ? 1 : 0 
   provisioner "local-exec" {
     command = <<EOF
 if [[ $(aws --version >/dev/null; echo $?) == '0' ]];then
