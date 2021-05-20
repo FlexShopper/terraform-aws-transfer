@@ -42,6 +42,12 @@ variable "s3_access_objects" {
   ]
 }
 
+variable "s3_acl" {
+  description = "Canned ACL to apply on S3 Bucket."
+  type        = string
+  default     = "private"
+}
+
 variable "s3_disable_public_access" {
   description = "Enable/disable public access on s3 bucket. By default public access blocked."
   type        = bool
