@@ -44,48 +44,41 @@ resource "aws_iam_policy" "this" {
   count       = var.create_sftp_server ? 1 : 0
   description = "Access Policy for S3 - AWS Transfer Family Service Role."
   name        = "${var.name_prefix}-${var.namespace}-iam-policy"
-  policy      = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "CloudWatchLogsAccess",
-      "Effect": "Allow",
-      "Action": [
-        "logs:*"
-      ],
-      "Resource": "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
-    },
-    {
-      "Sid": "S3ListBuckets",
-      "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${aws_s3_bucket.this[count.index].id}"
-      ]
-    },
-    {
-      "Sid": "S3BucketObjects",
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject",
-        "s3:DeleteObjectVersion",
-        "s3:GetObjectVersion",
-        "s3:GetObjectACL",
-        "s3:PutObjectACL"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${aws_s3_bucket.this[count.index].id}/*"
-      ]
-    }
-  ]
-}
-EOF
-
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid = "CloudWatchLogsAccess",
+        Effect = "Allow",
+        Action = [
+          "logs:*"
+        ],
+        Resource = "arn:aws:logs:${data.aws_region.this.name}:${data.aws_caller_identity.this.account_id}:log-group:/aws/transfer/${aws_transfer_server.sftp[count.index].id}"
+      },
+      {
+        Sid = "S3ListBuckets",
+        Effect = "Allow",
+        Action = [
+          "s3:ListBucket"
+        ],
+        Resource = var.s3_access_buckets
+      },
+      {
+        Sid = "S3BucketObjects",
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:DeleteObjectVersion",
+          "s3:GetObjectVersion",
+          "s3:GetObjectACL",
+          "s3:PutObjectACL"
+        ],
+        Resource = var.s3_access_objects
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
@@ -136,6 +129,12 @@ resource "aws_transfer_server" "sftp" {
     ),
     var.tags
   )
+
+  lifecycle {
+    ignore_changes = [
+      security_policy_name,
+    ]
+  }
 
   # Adding this to mimic behavior from AWS Console.
   # Option currently not available as Terraform input.

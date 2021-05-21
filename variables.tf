@@ -26,6 +26,22 @@ variable "log_retention" {
 }
 
 # S3
+variable "s3_access_buckets" {
+  description = "A list of ARNs for s3 buckets that the transfer server has access to."
+  type        = list(string)
+  default     = [
+    "arn:aws:s3:::*"
+  ]
+}
+
+variable "s3_access_objects" {
+  description = "A list of ARNs for s3 bucket objects that the transfer server has access to."
+  type        = list(string)
+  default     = [
+    "arn:aws:s3:::*/*"
+  ]
+}
+
 variable "s3_acl" {
   description = "Canned ACL to apply on S3 Bucket."
   type        = string
