@@ -4,7 +4,7 @@ Terraform module which creates SFTP Transfer-family resources on AWS.
 
 ## Terraform versions
 
-Tested on Terraform 0.14 and newer. Submit pull-requests to `main` branch.
+Tested on Terraform 1.0.0 and newer. Submit pull-requests to `main` branch.
 
 ## Usage
 
