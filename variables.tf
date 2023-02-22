@@ -1,6 +1,7 @@
 variable "name" {
   description = "name to prepend to all resource names within module"
   type        = string
+  default = "sftp-prod"
 }
 
 variable "input_tags" {
@@ -21,13 +22,13 @@ variable "directory_id" {
 variable "premade_s3_bucket" {
   description = "Use the pre-made S3 bucket and policies included in the module, or use a custom S3 bucket."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "s3_bucket_name" {
   description = "Bucket Name if premade_s3_bucket is set to FALSE"
   type        = string
-  default     = null
+  default     = sftp-prod
 }
 
 variable "force_destroy" {
@@ -40,23 +41,25 @@ variable "force_destroy" {
 variable "transfer_access_sids" {
   description = "External SIDs allowed access to the Transfer Server"
   type        = list(string)
+  default = ["S-1-5-21-1426789113-3690512563-3263562182-6868","S-1-5-21-1426789113-3690512563-3263562182-6870","S-1-5-21-1426789113-3690512563-3263562182-6869"]
 }
 
 variable "enable_custom_dns" {
   description = "Boolean to enable custom DNS for Transfer Family"
   type        = bool
+  default = "transfer"
 }
 
 variable "custom_dns_hostname" {
   description = "FQDN for custom DNS for SFTP Server"
   type        = string
-  default     = ""
+  default     = "transfer.flexshopper.com"
 }
 
 variable "r53_hosted_zone_id" {
   description = "R53 Hosted Zone ID for Custom Hostname"
   type        = string
-  default     = ""
+  default     = "Z3L2B6Q3Y247LZ"
 }
 
 variable "security_policy_name" {
