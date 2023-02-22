@@ -1,0 +1,89 @@
+stages:
+- secrets
+- authentication
+- setup
+- planning
+- execution
+- outcome
+
+setup-secrets:
+  image: registry.flexshopper.xyz:5000/scribe:latest
+  stage: secrets
+  variables:
+    GIT_SUBMODULE_STRATEGY: normal
+  script:
+  - scribe version
+  - scribe compose -c ./.scribe.yaml
+  - chmod +x ./env.sh
+  artifacts:
+    paths:
+    - ./env.sh
+    expire_in: 20m
+
+acquire-vault-token:
+  image: vault:latest
+  stage: authentication
+  before_script:
+  - apk update
+  - apk add jq
+  script:
+  - export VAULT_ADDR=$VAULT_ADDRESS
+  - vault status
+  - vault write -format=json auth/approle/login role_id=$VAULT_ROLE_ID secret_id=$VAULT_SECRET_ID | jq '.auth.client_token' | tr -d '"' > ./.vault-token
+  - cp ./.vault-token $HOME/.vault-token
+  - vault read secrets/ops/flexshopper-ci
+  artifacts:
+    paths:
+    - ./.vault-token
+    expire_in: 20m
+
+write-secrets-file:
+  image: alpine
+  stage: setup
+  script:
+  - source ./env.sh
+  - echo "provider_rmq_host = \"$RABBITMQ_HOST\"" >> secret.tfvars
+  - echo "provider_rmq_username = \"$RABBITMQ_USERNAME\"" >> secret.tfvars
+  - echo "provider_rmq_password = \"$RABBITMQ_PASSWORD\"" >> secret.tfvars
+  - echo "provider_fastly_api_key = \"${FASTLY_API_KEY}\"" >> secret.tfvars
+  - echo "ansible_playbooks_vault_password = \"${ANSIBLE_PLAYBOOKS_VAULT_PASSWORD}\"" >> secret.tfvars
+  - echo "provider_mongodbatlas_private_key = \"${MONGODBATLAS_PRIVATE_KEY}\"" >> secret.tfvars
+  - echo "provider_mongodbatlas_public_key = \"${MONGODBATLAS_PUBLIC_KEY}\"" >> secret.tfvars
+  artifacts:
+    paths:
+    - ./secret.tfvars
+    expire_in: 20m
+
+plan-terraform-changes:
+  image: registry.flexshopper.xyz:5000/flex-terraform-aws:0.14.11-rc1
+  stage: planning
+  before_script:
+  - mv ./.vault-token $HOME
+  script:
+  - sed -i -e 's/\\u000A/\n/g' ./env.sh
+  - source ./env.sh
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$TERRAFORM_DEPLOY_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - terraform version
+  - terraform init
+  - KUBERNETES_SERVICE_HOST="" KUBERNETES_SERVICE_PORT="" terraform plan -no-color -parallelism=80 -var-file="secret.tfvars"
+
+apply-terraform-changes:
+  image: registry.flexshopper.xyz:5000/flex-terraform-aws:0.14.11-rc1
+  stage: execution
+  before_script:
+  - mv ./.vault-token $HOME
+  script:
+  - sed -i -e 's/\\u000A/\n/g' ./env.sh
+  - source ./env.sh
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$TERRAFORM_DEPLOY_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - terraform version
+  - terraform init
+  - KUBERNETES_SERVICE_HOST="" KUBERNETES_SERVICE_PORT="" terraform apply -no-color -parallelism=80 -auto-approve -var-file="secret.tfvars"
+  only:
+    - master
