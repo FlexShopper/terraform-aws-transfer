@@ -1,0 +1,4 @@
+#!/bin/bash
+{{- range $key, $value := . }}
+export {{ $key | upper }}="{{ $value | js }}"
+{{- end }}
