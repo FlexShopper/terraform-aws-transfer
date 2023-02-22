@@ -1,0 +1,36 @@
+tomes:
+- instrument:
+    type: template
+    templatePath: ./.scribe.output.tmpl
+    outputPath: ./env.sh
+  secrets:
+  - path: secrets/secure/ops/flexshopper-ci
+    fields:
+    - name: S3_ACCESS_KEY
+      mapTo: AWS_ACCESS_KEY_ID
+    - name: S3_SECRET_KEY
+      mapTo: AWS_SECRET_ACCESS_KEY
+    - name: SLACK_WEBHOOK_URL
+    - name: TERRAFORM_DEPLOY_KEY
+  - path: secrets/secure/prod/cloudAMQP
+    fields:
+    - name: host_management
+      mapTo: RABBITMQ_HOST
+    - name: user
+      mapTo: RABBITMQ_USERNAME
+    - name: password
+      mapTo: RABBITMQ_PASSWORD
+  - path: secrets/secure/prod/fastly
+    fields:
+    - name: fastly_api_key
+      mapTo: FASTLY_API_KEY
+  - path: secrets/secure/ops/ansible
+    fields:
+    - name: vault-password
+      mapTo: ANSIBLE_PLAYBOOKS_VAULT_PASSWORD
+  - path: secrets/secure/ops/mongodbatlas
+    fields:
+    - name: private_key
+      mapTo: MONGODBATLAS_PRIVATE_KEY
+    - name: public_key
+      mapTo: MONGODBATLAS_PUBLIC_KEY
