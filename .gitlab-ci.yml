@@ -21,7 +21,7 @@ setup-secrets:
     expire_in: 20m
 
 acquire-vault-token:
-  image: vault:latest
+  image: registry.flexshopper.xyz:5000/vault:latest
   stage: authentication
   before_script:
   - apk update
