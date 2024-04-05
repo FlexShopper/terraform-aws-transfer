@@ -28,7 +28,7 @@ variable "premade_s3_bucket" {
 variable "s3_bucket_name" {
   description = "Bucket Name if premade_s3_bucket is set to FALSE"
   type        = string
-  default     = sftp-prod
+  default     = "sftp-prod"
 }
 
 variable "force_destroy" {
