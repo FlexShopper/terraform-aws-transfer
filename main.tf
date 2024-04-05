@@ -40,6 +40,6 @@ resource "aws_transfer_access" "this" {
 
   role           = aws_iam_role.aws_transfer_role.arn
   server_id      = aws_transfer_server.this.id
-  home_directory = var.premade_s3_bucket == true ? "/${module.sftp_storage_bucket[0].s3_bucket_id}" : "/${var.s3_bucket_name}/${Transfer:UserName}"
+  home_directory = var.premade_s3_bucket == true ? "/${module.sftp_storage_bucket[0].s3_bucket_id}" : "/${var.s3_bucket_name}/${Transfer.UserName}"
   external_id    = each.value
 }
