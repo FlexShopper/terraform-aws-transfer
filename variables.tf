@@ -46,7 +46,7 @@ variable "transfer_access_sids" {
 
 variable "enable_custom_dns" {
   description = "Boolean to enable custom DNS for Transfer Family"
-  type        = bool
+  type        = string
   default = "transfer"
 }
 
