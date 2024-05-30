@@ -65,5 +65,5 @@ variable "r53_hosted_zone_id" {
 variable "security_policy_name" {
   description = "Transfer Family Security Policy Name - https://docs.aws.amazon.com/transfer/latest/userguide/security-policies.html"
   type        = string
-  default     = "TransferSecurityPolicy-2022-03"
+  default     = "TransferSecurityPolicy-2018-11"
 }
